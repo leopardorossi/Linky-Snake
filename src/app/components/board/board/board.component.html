@@ -1,0 +1,7 @@
+<div class="board">
+    <div *ngFor="let row of board" class="row">
+        <div *ngFor="let col of row" class="cell" [ngClass]="getCellClass(col)">
+            
+        </div>
+    </div>
+</div>
