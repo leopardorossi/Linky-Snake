@@ -1,4 +1,4 @@
-class SinglyLinkedList {
+export class SinglyLinkedList {
     head: LinkedListNode;
     tail: LinkedListNode;
 
@@ -9,7 +9,7 @@ class SinglyLinkedList {
     }
 }
 
-class LinkedListNode {
+export class LinkedListNode {
     value: any;
     next: LinkedListNode;
 
