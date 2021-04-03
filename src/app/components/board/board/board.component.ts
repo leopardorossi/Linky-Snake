@@ -1,4 +1,4 @@
-import { SinglyLinkedList, LinkedListNode } from './../../../models/SinglyLinkedList';
+import { LinkedList, LinkedListNode, Snake } from './../../../models/LinkedList';
 import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
@@ -16,9 +16,10 @@ export class BoardComponent implements OnInit {
   // Define a set that will conatin the ids of the cells that are part of the snake body
   snakeCells: Set<number>;
   // Define the datastructure that will keep the snake body
-  snake: SinglyLinkedList;
+  snake: Snake;
   // Define a variable that will contain the current snake's movement direction
   dir: string;
+  oldDir: string;
 
   // Define the possible movement directions
   Direction = {
@@ -30,6 +31,7 @@ export class BoardComponent implements OnInit {
 
   constructor() {
     this.snakeCells = new Set();
+    this.oldDir = '';
   }
 
   ngOnInit() {
@@ -38,7 +40,7 @@ export class BoardComponent implements OnInit {
     // Set the initial direction
     this.dir = this.Direction.DOWN;
     // Initialize the snake body
-    this.snake = new SinglyLinkedList(this.getInitialSnakePosition());
+    this.snake = new Snake(this.getInitialSnakePosition());
     // Pick the cell at which the snake start
     this.snakeCells.add(this.snake.head.value.cell);
     // Decide the initial position of the food
@@ -59,6 +61,7 @@ export class BoardComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   getDirection(event: KeyboardEvent) {
+    this.oldDir = this.dir;
     if (event.code === "ArrowUp") {
       this.dir = this.Direction.UP;
     } else if (event.code === "ArrowDown") {
@@ -84,6 +87,12 @@ export class BoardComponent implements OnInit {
   }
 
   public moveSnake() {
+    
+    const isOppositeDir = this.dir === this.getOppositeDirection(this.oldDir);
+    if (isOppositeDir) {
+      this.snake.reverse(); 
+    }
+
     // First of all determine the current position of snake head
     const currPos = {
       row: this.snake.head.value.row,
@@ -92,31 +101,27 @@ export class BoardComponent implements OnInit {
     };
 
     // Calculate the new position base on current one and the direction
-    const newPosition = this.getNewPosition(currPos);
-    // Get the board cell value
+    const newPosition = this.getNewPosition(currPos, this.dir);
     const newCellVal = this.board[newPosition.row][newPosition.col];
 
     // Check if the snake touches the boundaries
     if (this.isOutOfBoundaries(newPosition)) { this.gameOver(); return; }
     // Check if the snake eats its own tail
-    if (this.snakeCells.has(newCellVal)) { this.gameOver(); return; }
+    if (!isOppositeDir && this.snakeCells.has(newCellVal)) { this.gameOver(); return; }
 
-    // Create a new head and connect it with the snake body
-    const newHead = new LinkedListNode({row: newPosition.row, col: newPosition.col, cell: newCellVal});
-    // Update
-    this.snake.head = newHead;
+    const {row, col} = newPosition;
+    const oldTail = this.snake.move({ row: row, col: col, cell: newCellVal });
+    console.log("Old tail", oldTail.value.cell);
 
-    // Handle the snake cells
-    this.snakeCells.delete(this.snake.tail.value.cell);
-    this.snakeCells.add(newCellVal);
-    
-    this.snake.tail = this.snake.tail.next;
-    if (this.snake.tail == null) this.snake.tail = this.snake.head;
+    this.snakeCells.delete(oldTail.value.cell);
+    this.snakeCells.add(this.snake.head.value.cell);
 
     // Check if on food
-    if (newCellVal == this.foodCell) {
+    if (newCellVal == this.foodCell) {    
       // Increase the snake size
+      this.growSnake();
       // Rigenerate the food
+      this.foodCell = this.generateFoodPosition();
     }
   }
 
@@ -134,29 +139,29 @@ export class BoardComponent implements OnInit {
     };
   }
 
-  private getNewPosition(currentPos: any): any {
-    if (this.dir == this.Direction.UP) {
+  private getNewPosition(currentPos: any, dir: string): any {
+    if (dir === this.Direction.UP) {
       return { 
         row: currentPos.row - 1,
         col: currentPos.col
       };
     }
     
-    if (this.dir == this.Direction.DOWN) {
+    if (dir === this.Direction.DOWN) {
       return { 
         row: currentPos.row + 1,
         col: currentPos.col
       };
     }
     
-    if (this.dir == this.Direction.LEFT) {
+    if (dir === this.Direction.LEFT) {
       return { 
         row: currentPos.row,
         col: currentPos.col - 1
       };
     }
 
-    if (this.dir == this.Direction.RIGHT) {
+    if (dir === this.Direction.RIGHT) {
       return { 
         row: currentPos.row,
         col: currentPos.col + 1
@@ -164,7 +169,7 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  private gameOver() {}
+  private gameOver() { console.log("Game over!"); }
 
   private isOutOfBoundaries(pos: any): boolean {
     const {row, col} = pos;
@@ -185,6 +190,23 @@ export class BoardComponent implements OnInit {
       if (!this.snakeCells.has(val))
         return val;
     }
+  }
+
+  private growSnake() {
+    const newPos = this.getNewPosition(this.snake.tail.value, this.getOppositeDirection(this.dir)); 
+    const cellVal = this.board[newPos.row][newPos.col];
+    
+    const {row, col} = newPos;
+    this.snake.grow({ row: row, col: col, cell: cellVal });
+
+    this.snakeCells.add(cellVal);
+  }
+
+  private getOppositeDirection(dir: string): string {
+    if (dir === this.Direction.UP) return this.Direction.DOWN;
+    if (dir === this.Direction.DOWN) return this.Direction.UP;
+    if (dir === this.Direction.LEFT) return this.Direction.RIGHT;
+    if (dir === this.Direction.RIGHT) return this.Direction.LEFT;
   }
 
   private randomInInterval(min, max) {
