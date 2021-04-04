@@ -23,6 +23,7 @@ export class BoardComponent implements OnInit {
   reversed: boolean;
 
   clock: any;
+  isGameOver: boolean;
 
   // Define the possible movement directions
   Direction = {
@@ -74,6 +75,10 @@ export class BoardComponent implements OnInit {
     this.initializeGame();
   }
 
+  public playAgain() {
+    this.initializeGame();
+  }
+
   private initializeGame() {
     // Set the initial direction
     this.dir = this.Direction.DOWN;
@@ -84,9 +89,10 @@ export class BoardComponent implements OnInit {
     this.snakeCells.add(this.snake.head.value.cell);
     // Decide the initial position of the food
     this.foodCell = this.generateFoodPosition();
-    
+
     this.oldDir = '';
     this.reversed = false;
+    this.isGameOver = false;
   }
 
   private createBoard() {
@@ -121,10 +127,11 @@ export class BoardComponent implements OnInit {
 
     // Calculate the new position base on current one and the direction
     const newPosition = this.getNewPosition(currPos, this.dir);
-    const newCellVal = this.board[newPosition.row][newPosition.col];
-
     // Check if the snake touches the boundaries
     if (this.isOutOfBoundaries(newPosition)) { this.gameOver(); return; }
+
+    const newCellVal = this.board[newPosition.row][newPosition.col];
+
     // Check if the snake eats its own tail
     if (!isOppositeDir && this.snakeCells.has(newCellVal)) { this.gameOver(); return; }
 
@@ -187,10 +194,14 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  private gameOver() { console.log("Game over!"); }
+  private gameOver() {
+    this.isGameOver = true; 
+    clearInterval(this.clock);
+  }
 
   private isOutOfBoundaries(pos: any): boolean {
     const {row, col} = pos;
+    console.log(row);
     if (row < 0 || row >= this.BOARD_SIZE)
       return true;
     if (col < 0 || col >= this.BOARD_SIZE)

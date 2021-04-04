@@ -1,16 +1,26 @@
 <div class="game">
-    <p>Snake</p>
-
-    <div class="controls">
-        <button mat-raised-button (click)="startGame()">Play</button>
-        <button mat-raised-button (click)="resetGame()">Reset</button>
+    <div class="heading">
+        <p class="title">Snake</p>
+        <div class="controls" *ngIf="!isGameOver">
+            <button mat-icon-button color="accent" (click)="startGame()">
+                <mat-icon class="control">play_circle_filled</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" (click)="resetGame()">
+                <mat-icon class="control">replay_circle_filled</mat-icon>
+            </button>
+        </div>
     </div>
     
-    <div class="board">
+    <div class="board" *ngIf="!isGameOver">
         <div *ngFor="let row of board" class="row">
             <div *ngFor="let col of row" class="cell" [ngClass]="getCellClass(col)">
                 
             </div>
         </div>
+    </div>
+
+    <div *ngIf="isGameOver">
+        <p>Game over!</p>
+        <button mat-raised-button (click)="playAgain()">Play again</button>
     </div>
 </div>

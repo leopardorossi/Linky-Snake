@@ -1,3 +1,10 @@
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+@font-face {
+    font-family: Symtext;
+    src: url("./assets/fonts/Symtext.ttf");
+}
+
 body {
     text-align: center;
     background-color: #282c34;
