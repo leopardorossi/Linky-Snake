@@ -1,8 +1,16 @@
-<button title="Move" (click)="moveSnake()">Move</button>
-<div class="board">
-    <div *ngFor="let row of board" class="row">
-        <div *ngFor="let col of row" class="cell" [ngClass]="getCellClass(col)">
-            
+<div class="game">
+    <p>Snake</p>
+
+    <div class="controls">
+        <button mat-raised-button (click)="startGame()">Play</button>
+        <button mat-raised-button (click)="resetGame()">Reset</button>
+    </div>
+    
+    <div class="board">
+        <div *ngFor="let row of board" class="row">
+            <div *ngFor="let col of row" class="cell" [ngClass]="getCellClass(col)">
+                
+            </div>
         </div>
     </div>
 </div>

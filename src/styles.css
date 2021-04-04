@@ -8,3 +8,5 @@ body {
     font-size: calc(10px + 2vmin);
     color: white;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

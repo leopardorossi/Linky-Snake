@@ -1,5 +1,12 @@
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .board {
     outline: 2px solid rgb(134, 154, 189);
+    margin-top: 20px;
 }
 
 .row {
@@ -19,4 +26,10 @@
 
 .food-cell {
     background-color: red;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }

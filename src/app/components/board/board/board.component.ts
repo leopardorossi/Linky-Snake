@@ -22,6 +22,8 @@ export class BoardComponent implements OnInit {
   oldDir: string;
   reversed: boolean;
 
+  clock: any;
+
   // Define the possible movement directions
   Direction = {
     UP: 'UP',
@@ -30,27 +32,12 @@ export class BoardComponent implements OnInit {
     RIGHT: 'RIGHT'
   } 
 
-  constructor() {
-    this.snakeCells = new Set();
-    this.oldDir = '';
-    this.reversed = false;
-  }
+  constructor() {}
 
   ngOnInit() {
     // Create the board for the game
     this.createBoard();
-    // Set the initial direction
-    this.dir = this.Direction.DOWN;
-    // Initialize the snake body
-    this.snake = new Snake(this.getInitialSnakePosition());
-    // Pick the cell at which the snake start
-    this.snakeCells.add(this.snake.head.value.cell);
-    // Decide the initial position of the food
-    this.foodCell = this.generateFoodPosition();
-
-    // setInterval(() => {
-    //   this.moveSnake();
-    // }, 300);
+    this.initializeGame();
   }
 
   getCellClass(idx: number) {    
@@ -76,6 +63,32 @@ export class BoardComponent implements OnInit {
     }
   }
 
+  public startGame() {
+    this.clock = setInterval(() => {
+      this.moveSnake();
+    }, 300);
+  }
+
+  public resetGame() {
+    clearInterval(this.clock);
+    this.initializeGame();
+  }
+
+  private initializeGame() {
+    // Set the initial direction
+    this.dir = this.Direction.DOWN;
+    // Initialize the snake body
+    this.snake = new Snake(this.getInitialSnakePosition());
+    // Pick the cell at which the snake start
+    this.snakeCells = new Set();
+    this.snakeCells.add(this.snake.head.value.cell);
+    // Decide the initial position of the food
+    this.foodCell = this.generateFoodPosition();
+    
+    this.oldDir = '';
+    this.reversed = false;
+  }
+
   private createBoard() {
     // Define a counter that will play the role of unique identifier for the cells
     let counter = 1;
@@ -93,8 +106,10 @@ export class BoardComponent implements OnInit {
     
     const isOppositeDir = this.dir === this.getOppositeDirection(this.oldDir);
     if (isOppositeDir && !this.reversed) {
+      const tailDir = this.getTailDirection();
       this.snake.reverse();
       this.reversed = true;
+      this.dir = this.getOppositeDirection(tailDir);
     }
 
     // First of all determine the current position of snake head
