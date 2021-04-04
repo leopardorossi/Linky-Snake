@@ -65,8 +65,17 @@ export class Snake extends LinkedList {
             curs = curs.prec;
         }
 
-        // const temp = this.head;
-        // this.head = this.tail;
-        // this.tail = temp;
+        const temp = this.head;
+        this.head = this.tail;
+        this.tail = temp;
+    }
+
+    public getTailOrientation(): any {
+        if (this.length <= 1) return {rowDiff: 0, colDiff: 0};
+            
+        return {
+            rowDiff: this.tail.value.row - this.tail.prec.value.row,
+            colDiff: this.tail.value.col - this.tail.prec.value.col
+        };
     }
 }

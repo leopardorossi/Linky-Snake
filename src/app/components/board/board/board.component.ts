@@ -20,6 +20,7 @@ export class BoardComponent implements OnInit {
   // Define a variable that will contain the current snake's movement direction
   dir: string;
   oldDir: string;
+  reversed: boolean;
 
   // Define the possible movement directions
   Direction = {
@@ -32,6 +33,7 @@ export class BoardComponent implements OnInit {
   constructor() {
     this.snakeCells = new Set();
     this.oldDir = '';
+    this.reversed = false;
   }
 
   ngOnInit() {
@@ -48,7 +50,7 @@ export class BoardComponent implements OnInit {
 
     // setInterval(() => {
     //   this.moveSnake();
-    // }, 1000);
+    // }, 300);
   }
 
   getCellClass(idx: number) {    
@@ -62,6 +64,7 @@ export class BoardComponent implements OnInit {
   @HostListener('window:keydown', ['$event'])
   getDirection(event: KeyboardEvent) {
     this.oldDir = this.dir;
+    this.reversed = false;
     if (event.code === "ArrowUp") {
       this.dir = this.Direction.UP;
     } else if (event.code === "ArrowDown") {
@@ -89,8 +92,9 @@ export class BoardComponent implements OnInit {
   public moveSnake() {
     
     const isOppositeDir = this.dir === this.getOppositeDirection(this.oldDir);
-    if (isOppositeDir) {
-      this.snake.reverse(); 
+    if (isOppositeDir && !this.reversed) {
+      this.snake.reverse();
+      this.reversed = true;
     }
 
     // First of all determine the current position of snake head
@@ -111,7 +115,6 @@ export class BoardComponent implements OnInit {
 
     const {row, col} = newPosition;
     const oldTail = this.snake.move({ row: row, col: col, cell: newCellVal });
-    console.log("Old tail", oldTail.value.cell);
 
     this.snakeCells.delete(oldTail.value.cell);
     this.snakeCells.add(this.snake.head.value.cell);
@@ -193,7 +196,9 @@ export class BoardComponent implements OnInit {
   }
 
   private growSnake() {
-    const newPos = this.getNewPosition(this.snake.tail.value, this.getOppositeDirection(this.dir)); 
+    const tailDir = this.getTailDirection();
+    console.log("Tail dir", tailDir);
+    const newPos = this.getNewPosition(this.snake.tail.value, this.getOppositeDirection(tailDir)); 
     const cellVal = this.board[newPos.row][newPos.col];
     
     const {row, col} = newPos;
@@ -207,6 +212,17 @@ export class BoardComponent implements OnInit {
     if (dir === this.Direction.DOWN) return this.Direction.UP;
     if (dir === this.Direction.LEFT) return this.Direction.RIGHT;
     if (dir === this.Direction.RIGHT) return this.Direction.LEFT;
+  }
+
+  private getTailDirection(): string {
+    const {rowDiff, colDiff} = this.snake.getTailOrientation();
+
+    if (colDiff < 0) return this.Direction.RIGHT;
+    if (colDiff > 0) return this.Direction.LEFT;
+    if (rowDiff < 0) return this.Direction.DOWN;
+    if (rowDiff > 0) return this.Direction.UP;
+
+    return this.dir;
   }
 
   private randomInInterval(min, max) {
