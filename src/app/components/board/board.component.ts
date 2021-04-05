@@ -1,4 +1,4 @@
-import { LinkedList, LinkedListNode, Snake } from './../../../models/LinkedList';
+import { LinkedList, LinkedListNode, Snake } from './../../models/LinkedList';
 import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
@@ -10,6 +10,7 @@ export class BoardComponent implements OnInit {
 
   board = [];
   BOARD_SIZE = 10;
+  SCORE_INCREMENT = 10;
 
   // Define a number that represents the food cell value
   foodCell: number;
@@ -24,6 +25,8 @@ export class BoardComponent implements OnInit {
 
   clock: any;
   isGameOver: boolean;
+
+  score: number;
 
   // Define the possible movement directions
   Direction = {
@@ -93,6 +96,7 @@ export class BoardComponent implements OnInit {
     this.oldDir = '';
     this.reversed = false;
     this.isGameOver = false;
+    this.score = 0;
   }
 
   private createBoard() {
@@ -147,6 +151,8 @@ export class BoardComponent implements OnInit {
       this.growSnake();
       // Rigenerate the food
       this.foodCell = this.generateFoodPosition();
+      // Increase the score
+      this.score += this.SCORE_INCREMENT;
     }
   }
 
@@ -201,7 +207,6 @@ export class BoardComponent implements OnInit {
 
   private isOutOfBoundaries(pos: any): boolean {
     const {row, col} = pos;
-    console.log(row);
     if (row < 0 || row >= this.BOARD_SIZE)
       return true;
     if (col < 0 || col >= this.BOARD_SIZE)
@@ -223,7 +228,6 @@ export class BoardComponent implements OnInit {
 
   private growSnake() {
     const tailDir = this.getTailDirection();
-    console.log("Tail dir", tailDir);
     const newPos = this.getNewPosition(this.snake.tail.value, this.getOppositeDirection(tailDir)); 
     const cellVal = this.board[newPos.row][newPos.col];
     

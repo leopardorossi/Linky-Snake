@@ -36,10 +36,6 @@
     background-color: green;
 }
 
-.food-cell {
-    background-color: red;
-}
-
 .controls {
     display: flex;
     flex-direction: row;
@@ -48,4 +44,15 @@
 
 .control {
     font-size: 40px;
+}
+
+.score {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.score-text {
+    font-family: Symtext;
+    font-size: 20px;
 }

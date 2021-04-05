@@ -1,6 +1,6 @@
 <div class="game">
-    <div class="heading">
-        <p class="title">Snake</p>
+    <div class="heading" *ngIf="!isGameOver">
+        <span class="title">Snake</span>
         <div class="controls" *ngIf="!isGameOver">
             <button mat-icon-button color="accent" (click)="startGame()">
                 <mat-icon class="control">play_circle_filled</mat-icon>
@@ -11,16 +11,22 @@
         </div>
     </div>
     
+    <div class="score" *ngIf="!isGameOver">
+        <span class="score-text">Score: {{ score }}</span>
+    </div>
+
     <div class="board" *ngIf="!isGameOver">
         <div *ngFor="let row of board" class="row">
             <div *ngFor="let col of row" class="cell" [ngClass]="getCellClass(col)">
-                
+                <img width="35" height="35" src="assets/images/apple.svg" *ngIf="getCellClass(col) === 'food-cell'"/>
             </div>
         </div>
     </div>
 
     <div *ngIf="isGameOver">
-        <p>Game over!</p>
-        <button mat-raised-button (click)="playAgain()">Play again</button>
+        <p class="title">Game over!</p>
+        <button mat-icon-button color="accent" (click)="resetGame()">
+            <mat-icon class="control">replay_circle_filled</mat-icon>
+        </button>
     </div>
 </div>
