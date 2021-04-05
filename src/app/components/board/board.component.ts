@@ -70,7 +70,7 @@ export class BoardComponent implements OnInit {
   public startGame() {
     this.clock = setInterval(() => {
       this.moveSnake();
-    }, 300);
+    }, 200);
   }
 
   public resetGame() {

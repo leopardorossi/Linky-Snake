@@ -25,8 +25,11 @@
 
     <div *ngIf="isGameOver">
         <p class="title">Game over!</p>
-        <button mat-icon-button color="accent" (click)="resetGame()">
-            <mat-icon class="control">replay_circle_filled</mat-icon>
-        </button>
+        <div id="gameOverMessage">
+            <span class="score-text">Hai totalizzato <span style="color: #F8D85E;">{{ score }}</span> punti</span>
+            <button style="margin-top: 10px;" mat-icon-button color="accent" (click)="resetGame()">
+                <mat-icon class="control">replay_circle_filled</mat-icon>
+            </button>
+        </div>
     </div>
 </div>

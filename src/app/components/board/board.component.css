@@ -56,3 +56,9 @@
     font-family: Symtext;
     font-size: 20px;
 }
+
+#gameOverMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
