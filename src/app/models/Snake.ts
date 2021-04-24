@@ -1,4 +1,4 @@
-export class LinkedList {
+class LinkedList {
     head: LinkedListNode;
     tail: LinkedListNode;
     length: number;
@@ -11,7 +11,7 @@ export class LinkedList {
     }
 }
 
-export class LinkedListNode {
+class LinkedListNode {
     value: any;
     next: LinkedListNode;
     prec: LinkedListNode;

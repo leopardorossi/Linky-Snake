@@ -8,14 +8,6 @@
             <button mat-icon-button color="accent" (click)="resetGame()">
                 <mat-icon class="control">replay_circle_filled</mat-icon>
             </button>
-            <button mat-icon-button color="accent" (click)="toggleSounds()">
-                <mat-icon class="control" *ngIf="isAudioOn; else switchOnAudio">volume_off</mat-icon>
-            </button>
-            <ng-template #switchOnAudio>
-                <button mat-icon-button color="accent" (click)="toggleSounds()">
-                    <mat-icon class="control">volume_up</mat-icon>
-                </button>
-            </ng-template>
         </div>
     </div>
     

@@ -1,4 +1,4 @@
-import { LinkedList, LinkedListNode, Snake } from './../../models/LinkedList';
+import { Snake } from '../../models/Snake';
 import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
