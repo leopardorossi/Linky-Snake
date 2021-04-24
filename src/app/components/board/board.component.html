@@ -8,6 +8,14 @@
             <button mat-icon-button color="accent" (click)="resetGame()">
                 <mat-icon class="control">replay_circle_filled</mat-icon>
             </button>
+            <button mat-icon-button color="accent" (click)="toggleSounds()">
+                <mat-icon class="control" *ngIf="isAudioOn; else switchOnAudio">volume_off</mat-icon>
+            </button>
+            <ng-template #switchOnAudio>
+                <button mat-icon-button color="accent" (click)="toggleSounds()">
+                    <mat-icon class="control">volume_up</mat-icon>
+                </button>
+            </ng-template>
         </div>
     </div>
     
@@ -18,7 +26,7 @@
     <div class="board" *ngIf="!isGameOver">
         <div *ngFor="let row of board" class="row">
             <div *ngFor="let col of row" class="cell" [ngClass]="getCellClass(col)">
-                <img width="35" height="35" src="assets/images/apple.svg" *ngIf="getCellClass(col) === 'food-cell'"/>
+                <img width="30" height="30" src="assets/images/apple.svg" *ngIf="getCellClass(col) === 'food-cell'"/>
             </div>
         </div>
     </div>

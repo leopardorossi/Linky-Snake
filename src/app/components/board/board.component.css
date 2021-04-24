@@ -22,13 +22,13 @@
 }
 
 .row {
-    height: 35px;
+    height: 30px;
 }
 
 .cell {
-    width: 35px;
-    height: 35px;
-    outline: 1px solid rgb(134, 154, 189);
+    width: 30px;
+    height: 30px;
+    outline: 1px solid rgba(134, 154, 189, 0.3);
     display: inline-block;
 }
 
