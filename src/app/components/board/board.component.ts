@@ -11,6 +11,7 @@ export class BoardComponent implements OnInit {
   board = [];
   BOARD_SIZE = 10;
   SCORE_INCREMENT = 10;
+  GAME_SPEED = 270;
 
   // Define a number that represents the food cell value
   foodCell: number;
@@ -70,7 +71,7 @@ export class BoardComponent implements OnInit {
   public startGame() {
     this.clock = setInterval(() => {
       this.moveSnake();
-    }, 200);
+    }, this.GAME_SPEED);
   }
 
   public resetGame() {
